@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: gestao-materiais
+    env: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    dockerfilePath: Dockerfile
+    buildCommand: ""
+    startCommand: ""

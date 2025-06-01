@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <title>Publicar Material</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 1rem;
+    }
+
+    input, textarea, button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #005a87;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00466b;
+    }
+
+    .msg {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Publicar Novo Anúncio</h1>
+  <form id="formulario">
+    <input type="text" name="titulo" placeholder="Título do material" required>
+    <input type="url" name="imagem" placeholder="URL da imagem (direto)" required>
+    <textarea name="descricao" placeholder="Descrição do material" rows="4" required></textarea>
+    <input type="text" name="contacto" placeholder="Contacto (email ou telefone)" required>
+    <button type="submit">Publicar</button>
+  </form>
+
+  <div class="msg" id="msg"></div>
+
+  <script>
+    const form = document.getElementById('formulario');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const formData = new URLSearchParams();
+  formData.append("titulo", form.titulo.value);
+  formData.append("imagem", form.imagem.value);
+  formData.append("descricao", form.descricao.value);
+  formData.append("contacto", form.contacto.value);
+
+  try {
+    const res = await fetch('https://script.google.com/macros/s/AKfycbyHKi4Jz438MwrvetjD0rtS1LoOSVDkmPdPkhzxiK_a36BISx7UNC9DTNyfDMcoRmYa/exec', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (res.ok) {
+      msg.textContent = "✅ Anúncio publicado com sucesso!";
+      form.reset();
+    } else {
+      msg.textContent = "❌ Erro ao enviar. Tente novamente.";
+    }
+  } catch (error) {
+    msg.textContent = "❌ Erro de rede.";
+    console.error(error);
+  }
+});
+  </script>
+
+</body>
+</html>

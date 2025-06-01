@@ -78,42 +78,45 @@
 
   <div class="msg" id="msg"></div>
 
-  <script>
-    const form = document.getElementById('formulario');
-    const msg = document.getElementById('msg');
+ <script>
+  const form = document.getElementById('formulario');
+  const msg = document.getElementById('msg');
 
-    form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+  function gravarViaGet(titulo, imagem, descricao, contacto) {
+    const baseUrl = 'https://script.google.com/macros/s/AKfycbyHKi4Jz438MwrvetjD0rtS1LoOSVDkmPdPkhzxiK_a36BISx7UNC9DTNyfDMcoRmYa/exec';
 
-  const dados = new URLSearchParams();
-  dados.append('titulo', form.titulo.value);
-  dados.append('imagem', form.imagem.value);
-  dados.append('descricao', form.descricao.value);
-  dados.append('contacto', form.contacto.value);
+    const url = `${baseUrl}?titulo=${encodeURIComponent(titulo)}&imagem=${encodeURIComponent(imagem)}&descricao=${encodeURIComponent(descricao)}&contacto=${encodeURIComponent(contacto)}`;
 
-  try {
-    const res = await fetch('https://script.google.com/macros/s/AKfycbyHKi4Jz438MwrvetjD0rtS1LoOSVDkmPdPkhzxiK_a36BISx7UNC9DTNyfDMcoRmYa/exec', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
-      },
-      body: dados.toString(),
-    });
-
-    if (res.ok) {
-      msg.textContent = "✅ Anúncio publicado com sucesso!";
-      form.reset();
-      setTimeout(() => window.location.href = "index.html", 1500);
-    } else {
-      msg.textContent = "❌ Erro ao enviar. Tente novamente.";
-    }
-  } catch (error) {
-    msg.textContent = "❌ Erro de rede.";
-    console.error(error);
+    return fetch(url)
+      .then(res => res.json())
+      .then(data => data)
+      .catch(err => { throw err; });
   }
-});
 
-  </script>
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const titulo = form.titulo.value;
+    const imagem = form.imagem.value;
+    const descricao = form.descricao.value;
+    const contacto = form.contacto.value;
+
+    try {
+      const data = await gravarViaGet(titulo, imagem, descricao, contacto);
+      if (data.status === 'sucesso') {
+        msg.textContent = "✅ Anúncio publicado com sucesso!";
+        form.reset();
+        setTimeout(() => window.location.href = "index.html", 1500);
+      } else {
+        msg.textContent = `❌ Erro ao enviar: ${data.mensagem || 'Desconhecido'}`;
+      }
+    } catch (error) {
+      msg.textContent = "❌ Erro de rede.";
+      console.error(error);
+    }
+  });
+</script>
+
 
 </body>
 </html>

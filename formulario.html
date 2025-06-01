@@ -4,6 +4,27 @@
   <meta charset="UTF-8" />
   <title>Publicar Material</title>
   <style>
+    header {
+      background: #005a87;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    nav {
+      background: #013e5c;
+      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
     body {
       font-family: Arial, sans-serif;
       max-width: 600px;
@@ -36,7 +57,16 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>Maia Materials Exchange</h1>
+    <p>Plataforma autónoma para partilha e aquisição de materiais excedentes industriais</p>
+  </header>
 
+  <nav>
+    <a href="index.html#sobre">Sobre</a>
+    <a href="index.html#materiais">Materiais</a>
+    <a href="index.html#contacto">Contacto</a>
+  </nav>
   <h1>Publicar Novo Anúncio</h1>
   <form id="formulario">
     <input type="text" name="titulo" placeholder="Título do material" required>
@@ -55,29 +85,38 @@
     form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const formData = new URLSearchParams();
-  formData.append("titulo", form.titulo.value);
-  formData.append("imagem", form.imagem.value);
-  formData.append("descricao", form.descricao.value);
-  formData.append("contacto", form.contacto.value);
+  const dados = {
+    titulo: form.titulo.value,
+    imagem: form.imagem.value,
+    descricao: form.descricao.value,
+    contacto: form.contacto.value
+  };
 
   try {
     const res = await fetch('https://script.google.com/macros/s/AKfycbyHKi4Jz438MwrvetjD0rtS1LoOSVDkmPdPkhzxiK_a36BISx7UNC9DTNyfDMcoRmYa/exec', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dados),
     });
 
     if (res.ok) {
-      msg.textContent = "✅ Anúncio publicado com sucesso!";
-      form.reset();
-    } else {
+      msg.textContent = "✅ Anúncio publicado com sucesso! Redirecionando...";
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2000);
+    }
+    else {
       msg.textContent = "❌ Erro ao enviar. Tente novamente.";
     }
+
   } catch (error) {
     msg.textContent = "❌ Erro de rede.";
     console.error(error);
   }
 });
+
   </script>
 
 </body>

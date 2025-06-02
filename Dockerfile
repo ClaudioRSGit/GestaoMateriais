@@ -1,27 +1,15 @@
-FROM composer:2 as vendor
-
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-progress
-
-FROM php:8.2-apache
+FROM php:7.4-fpm
 
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip \
-    && docker-php-ext-install zip pdo pdo_mysql
+    libzip-dev zip unzip git curl libonig-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath
 
-RUN a2enmod rewrite
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
 COPY . .
 
-COPY --from=vendor /app/vendor ./vendor
+RUN composer install --no-dev --no-progress
 
-COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
-
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage
-
-EXPOSE 80
+CMD ["php-fpm"]

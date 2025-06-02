@@ -7,7 +7,30 @@
     body {
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      padding: 2rem;
+    }
+    header {
+      background: #005a87;
+      color: white;
+      text-align: center;
+    }
+    nav {
+      background: #013e5c;
+      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
     }
     .form-container {
       background: white;
@@ -28,6 +51,12 @@
       border-radius: 6px;
       font-size: 1rem;
     }
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
     button {
       background: #005a87;
       color: white;
@@ -43,8 +72,13 @@
   </style>
 </head>
 <body>
+<nav>
+  <div class="nav-links">
+    <a href="/">Início</a>
+  </div>
 
-<div class="form-container">
+</nav>
+<div class="form-container" style="margin-top: 30px">
   <h2>Publicar Novo Material</h2>
 
   {{-- Erros de validação --}}

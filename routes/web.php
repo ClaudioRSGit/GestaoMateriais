@@ -26,3 +26,8 @@ Route::get('/', [PostController::class, 'index']);
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 Route::post('/contact', [MessageController::class, 'store'])->name('contact.store');
+Route::post('/posts/{id}/approve', [PostController::class, 'approve'])->name('posts.approve');
+Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
+Route::post('/messages/{id}/toggle', [MessageController::class, 'toggleRead'])->name('messages.toggle');
+Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
+Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');

@@ -25,6 +25,8 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
+      display: flex;
+      justify-content: space-between;
     }
     nav a {
       color: white;
@@ -99,7 +101,7 @@
       display: inline-block;
       background: #005a87;
       color: white;
-      padding: 0.8rem 1.5rem;
+      padding: 0.5rem 1rem;
       border-radius: 6px;
       text-decoration: none;
       font-size: 1.1rem;
@@ -141,6 +143,13 @@
       margin-top: 2rem;
       font-size: 1.1rem;
     }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+    .text-center {
+      text-align: center;
+    }
     @media (max-width: 600px) {
       section {
         margin: 1rem;
@@ -155,25 +164,44 @@
 </head>
 <body>
 
+<nav>
+  <div class="nav-links">
+    <a href="#sobre">Sobre</a>
+    <a href="#materiais">Materiais</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <div>
+    @guest
+        <a href="{{ route('login') }}">Login</a>
+    @else
+        <a href="{{ route('home') }}">Administrador</a>
+    @endguest
+  </div>
+</nav>
+
 <header>
-  <h1>Maia Materials Exchange</h1>
+
+    <h1>Maia Materials Exchange</h1>
   <p>Plataforma autónoma para partilha e aquisição de materiais excedentes industriais</p>
 </header>
 
-<nav>
-  <a href="#sobre">Sobre</a>
-  <a href="#materiais">Materiais</a>
-  <a href="#contacto">Contacto</a>
-</nav>
+<section id="sobre" class="text-center">
+  <div>
+    <img src="/environment.jpg" alt="" style="width: 100%; height: auto; max-height: 300px; object-fit:cover;">
+</div>
+ <h1>Sobre o Projeto</h1>
+  <p>O Maia Materials Exchange é mais do que uma plataforma digital — é um movimento para transformar desperdício em valor. </p>
+  <p>Aqui, empresas podem publicar gratuitamente os seus materiais excedentes e ligá-los a quem precisa, seja para troca, doação ou venda.</p>
+  <p>Este projeto nasceu com um propósito:</p>
+  <p>🔄 Reduzir o desperdício industrial</p>
+  <p>🌱 Promover a reutilização e a sustentabilidade</p>
+  <p>💡 Fortalecer a economia circular local</p>
 
-<section id="sobre">
-  <h2>Sobre o Projeto</h2>
-  <p>O Maia Materials Exchange é uma plataforma digital de reutilização industrial que permite às empresas publicar gratuitamente os seus excedentes e encontrar interessados para compra, troca ou doação. Promovemos a sustentabilidade, a redução de desperdício e a economia circular.</p>
 </section>
 
 <section id="materiais">
-  <h2>Materiais Disponíveis</h2>
-  <a class="btn-publicar" href="{{ route('posts.create') }}">+ Publicar Anúncio</a>
+  <h2>Materiais Disponíveis <a class="btn-publicar" href="{{ route('posts.create') }}">+ </a></h2>
+
 
 {{-- Mensagem de sucesso --}}
 @if(session('success'))
@@ -196,22 +224,25 @@
 
   <div class="grid">
     @forelse($posts as $post)
-      <div class="card">
-        <h3><a href="{{ $post->url }}" target="_blank" rel="noopener noreferrer">{{ $post->title }}</a></h3>
-        <div class="image-container">
-            <img
-              src="{{ $post->url ?: 'https://assets-v2.lottiefiles.com/a/ba3f8d16-1161-11ee-9146-ff1c243cfdd2/8M5yJUdrZC.gif' }}"
-              alt="{{ $post->title }}"
-              onerror="this.src='https://assets-v2.lottiefiles.com/a/ba3f8d16-1161-11ee-9146-ff1c243cfdd2/8M5yJUdrZC.gif';"
-            >
-          </div>
-        <p>{{ $post->description }}</p>
-        <p><strong>Contacto:</strong> {{ $post->contact }}</p>
-      </div>
+        @if (!$post->is_deleted && $post->is_approved)
+            <div class="card">
+                <h3><a href="{{ $post->url }}" target="_blank" rel="noopener noreferrer">{{ $post->title }}</a></h3>
+                <div class="image-container">
+                    <img
+                        src="{{ $post->url ?: 'https://assets-v2.lottiefiles.com/a/ba3f8d16-1161-11ee-9146-ff1c243cfdd2/8M5yJUdrZC.gif' }}"
+                        alt="{{ $post->title }}"
+                        onerror="this.src='https://assets-v2.lottiefiles.com/a/ba3f8d16-1161-11ee-9146-ff1c243cfdd2/8M5yJUdrZC.gif';"
+                    >
+                </div>
+                <p>{{ $post->description }}</p>
+                <p><strong>Contacto:</strong> {{ $post->contact }}</p>
+            </div>
+        @endif
     @empty
-      <p>Nenhum material disponível no momento.</p>
+        <p>Nenhum material disponível no momento.</p>
     @endforelse
-  </div>
+</div>
+
 </section>
 
 <section id="contacto">

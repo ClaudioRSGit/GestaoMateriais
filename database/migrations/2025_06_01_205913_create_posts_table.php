@@ -19,6 +19,8 @@ class CreatePostsTable extends Migration
             $table->string('url');
             $table->text('description');
             $table->string('contact');
+            $table->boolean('is_approved')->default(false);
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }

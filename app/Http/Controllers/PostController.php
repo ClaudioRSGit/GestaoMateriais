@@ -30,4 +30,31 @@ class PostController extends Controller
     {
         return view('posts.create');
     }
+
+    public function approve($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->is_approved = true;
+        $post->save();
+
+        return redirect()->back()->with('success', 'Anúncio aprovado!');
+    }
+
+    public function destroy($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->is_deleted = true;
+        $post->save();
+
+        return redirect()->back()->with('success', 'Anúncio apagado!');
+    }
+
+    public function restore($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->is_deleted = false;
+        $post->save();
+
+        return redirect()->back()->with('status', 'Post recuperado com sucesso!');
+    }
 }

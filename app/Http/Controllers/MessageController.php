@@ -20,4 +20,21 @@ class MessageController extends Controller
 
         return redirect()->back()->with('success', 'Mensagem enviada com sucesso!');
     }
+
+    public function toggleRead($id)
+    {
+        $message = Message::findOrFail($id);
+        $message->is_read = !$message->is_read;
+        $message->save();
+
+        return redirect()->back()->with('success', 'Estado da mensagem atualizado!');
+    }
+
+    public function destroy($id)
+    {
+        $message = Message::findOrFail($id);
+        $message->delete();
+
+        return redirect()->back()->with('success', 'Mensagem apagada!');
+    }
 }

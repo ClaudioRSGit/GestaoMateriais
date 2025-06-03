@@ -31,3 +31,7 @@ Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.de
 Route::post('/messages/{id}/toggle', [MessageController::class, 'toggleRead'])->name('messages.toggle');
 Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
 Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

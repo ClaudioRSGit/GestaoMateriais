@@ -15,4 +15,5 @@ RUN composer install --no-dev --no-progress
 # CMD ["php-fpm"]
 EXPOSE 8080
 
-CMD php artisan serve --host=0.0.0.0 --port=8080
+# CMD php artisan serve --host=0.0.0.0 --port=8080
+CMD php artisan serve --host=0.0.0.0 --port=${PORT}

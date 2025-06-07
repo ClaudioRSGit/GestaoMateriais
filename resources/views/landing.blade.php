@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Maia Materials Exchange</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,21 +19,7 @@
       padding: 1.5rem;
       text-align: center;
     }
-    nav {
-      background: #013e5c;
-      padding: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      display: flex;
-      justify-content: space-between;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
+
     section {
       padding: 2rem;
       background: white;
@@ -50,6 +38,34 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
     }
+    .contact-tooltip {
+  position: relative;
+  cursor: help;
+  display: inline-block;
+  border-bottom: 1px dotted #666;
+}
+
+.contact-tooltip .tooltip-text {
+  visibility: hidden;
+  width: 180px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Posição acima */
+  left: 50%;
+  margin-left: -90px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.contact-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
     .card {
       background: #eaf6fb;
       padding: 1rem;
@@ -163,20 +179,62 @@
 </head>
 <body>
 
-<nav>
-  <div class="nav-links">
-    <a href="#sobre">Sobre</a>
-    <a href="#materiais">Materiais</a>
-    <a href="#contacto">Contacto</a>
-  </div>
-  <div>
-    @guest
-        <a href="{{ route('login') }}">Login</a>
-    @else
-        <a href="{{ route('home') }}">Administrador</a>
-    @endguest
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">MaiaXChange</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <!-- Left Side -->
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#sobre">Sobre</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#materiais">Materiais</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#contacto">Contacto</a>
+      </li>
+    </ul>
+
+    <!-- Right Side -->
+    <ul class="navbar-nav ml-auto">
+      @guest
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('login') }}">Login</a>
+        </li>
+        @if (Route::has('register'))
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('register') }}">Registar</a>
+          </li>
+        @endif
+      @else
+        <li class="nav-item dropdown">
+          <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+            {{ Auth::user()->name }}
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{{ route('home') }}">Administrador</a>
+            <a class="dropdown-item" href="{{ route('logout') }}"
+              onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+              Logout
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              @csrf
+            </form>
+          </div>
+        </li>
+      @endguest
+    </ul>
   </div>
 </nav>
+
 
 <header>
 
@@ -199,8 +257,13 @@
 </section>
 
 <section id="materiais">
-  <h2>Materiais Disponíveis <a class="btn-publicar" href="{{ route('posts.create') }}">+ </a></h2>
-
+  <h2>Materiais Disponíveis
+    @guest
+        <a class="btn-publicar" href="{{ route('login') }}">+ </a>
+    @else
+        <a class="btn-publicar" href="{{ route('posts.create') }}">+ </a>
+    @endguest
+    </h2>
 
 {{-- Mensagem de sucesso --}}
 @if(session('success'))
@@ -229,7 +292,7 @@
 
   <div class="grid">
     @forelse($posts as $post)
-        @if (!$post->is_deleted && $post->is_approved)
+        @if (!$post->is_deleted && $post->is_approved && (!$post->expires_at || $post->expires_at->isFuture()))
             <div class="card">
                 <h3>{{ $post->title }}</a></h3>
                 <p><strong>Disponivel até:</strong> {{ $post->expires_at ? $post->expires_at->format('d/m/Y') : 'Sem data limite' }}</p>
@@ -244,7 +307,14 @@
                     <strong>Descrição</strong>
                     <p>{{ $post->description }}</p>
                 </div>
-                <p><strong>Contacto:</strong> {{ $post->contact }}</p>
+                <p>
+                    <strong>Contacto:</strong>
+                </p>
+                    @guest
+                    <span class="contact-tooltip">******<span class="tooltip-text">Faça login para ver o contacto</span></span>
+                    @else
+                    {{ $post->contact }}
+                    @endguest
             </div>
         @endif
     @empty
@@ -275,5 +345,7 @@
       document.querySelectorAll('.alert').forEach(el => el.style.display = 'none');
     }, 3000);
   </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

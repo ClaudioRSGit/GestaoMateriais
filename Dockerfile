@@ -15,6 +15,6 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . /var/www
 WORKDIR /var/www
 RUN composer install --no-dev --no-scripts --no-progress
-
+RUN php artisan storage:link
 EXPOSE 8080
 CMD php artisan migrate --force && php artisan config:clear && php artisan serve --host=0.0.0.0 --port=${PORT}

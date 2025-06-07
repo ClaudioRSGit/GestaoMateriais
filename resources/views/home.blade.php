@@ -11,25 +11,42 @@
 
     <!-- Tabs -->
     <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Anúncios</a>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Anúncios</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" id="messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Mensagens</a>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="messages-tab" data-bs-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Mensagens</a>
         </li>
     </ul>
+
+    @php
+    function isImage($path) {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        return in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg']);
+    }
+
+    function getProgressPercentage($createdAt, $expiresAt) {
+        if (!$expiresAt || $createdAt->gt($expiresAt)) return 100;
+
+        $totalTime = $createdAt->diffInSeconds($expiresAt);
+        $elapsedTime = now()->diffInSeconds($expiresAt, false);
+        $usedTime = $totalTime - max($elapsedTime, 0);
+
+        return min(100, max(0, round(($usedTime / $totalTime) * 100)));
+    }
+    @endphp
 
     <!-- Tab Contents -->
     <div class="tab-content mt-3" id="dashboardTabsContent">
         <!-- POSTS TAB -->
-        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+        <div class="tab-pane fade show active table-responsive" id="posts" role="tabpanel" aria-labelledby="posts-tab">
             <div class="mb-3">
                 <a class="btn btn-primary" href="{{ route('posts.create') }}">Criar Novo Anúncio</a>
             </div>
             <table class="table table-bordered table-hover align-middle">
                 <thead>
                     <tr>
-                        <th>Título</th>
+                        <th>Anúncio</th>
                         <th>Estado</th>
                         <th>Data limite</th>
                         <th>Aprovado</th>
@@ -39,7 +56,27 @@
                 <tbody>
                     @foreach($posts as $post)
                     <tr>
-                        <td>{{ $post->title }}</td>
+                        <td>
+                            <div class="d-flex">
+                                <div style="margin-right: 10px;">
+                                    <img
+                                        src="{{ $post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : 'https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png' }}"
+                                        alt="{{ $post->title }}"
+                                        onerror="this.src='https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png';"
+                                        class="rounded-circle me-2"
+                                        style="width: 40px; height: 40px; object-fit: cover;"
+                                    />
+                                </div>
+                                <div class="my-auto">
+                                    <h6 class="mb-0 text-xs">{{ $post->title }}</h6>
+                                    @if ($post->is_deleted)
+                                        <span class="badge bg-danger ms-2" title="Este anúncio está inativo">
+                                            <i class="bi bi-exclamation-circle-fill"></i> Inativo
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </td>
                         <td class="text-center">
                             @if ($post->is_deleted)
                                 <i class="bi bi-x-circle-fill text-danger" title="Inativo"></i> Inativo
@@ -86,7 +123,7 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
+        </div> <!-- Fim do tab-pane posts -->
 
         <!-- MESSAGES TAB -->
         <div class="tab-pane fade" id="messages" role="tabpanel" aria-labelledby="messages-tab">
@@ -133,7 +170,7 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
+        </div> <!-- Fim do tab-pane messages -->
+    </div> <!-- Fim do tab-content -->
 </div>
 @endsection

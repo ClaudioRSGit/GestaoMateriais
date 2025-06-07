@@ -5,29 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Message;
+use App\SiteStat;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        return view('home', [
-            'posts' => Post::all(),
-            'messages' => Message::all()
-        ]);
+        $posts = Post::all();
+
+        foreach ($posts as $post) {
+            if ($post->expires_at && now()->gt($post->expires_at) && $post->is_active) {
+                $post->update(['is_active' => false]);
+            }
+        }
+
+        $messages = Message::all();
+        $visitCount = SiteStat::first()->visits ?? 0;
+
+        return view('home', compact('posts', 'messages', 'visitCount'));
     }
 }

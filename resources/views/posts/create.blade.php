@@ -92,14 +92,28 @@
     </div>
   @endif
 
-  <form action="{{ route('posts.store') }}" method="POST">
+  <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <input type="text" name="title" placeholder="Título" value="{{ old('title') }}" required>
-    <input type="url" name="url" placeholder="URL (opcional)" value="{{ old('url') }}">
+
+
+    <label for="attachment">Anexo (max 500MB)</label>
+    <input type="file" name="attachment" class="form-control">
+
+    <label for="duration_days">Duração do Anúncio (dias)</label>
+    <input type="number" name="duration_days" class="form-control" value="7" min="1">
+
     <textarea name="description" placeholder="Descrição" required>{{ old('description') }}</textarea>
+
     <input type="text" name="contact" placeholder="Contacto (email ou telefone)" value="{{ old('contact') }}" required>
-    <button type="submit">Guardar</button>
-  </form>
+
+    <div style="text-align: center; margin-top: 20px; width: 100%; display: flex; justify-content: center; gap: 10px;">
+      <button type="submit" style="width: 50%">Guardar</button>
+      <a href="{{ url('/') }}" class="btn-danger"
+        style="background:#d9534f; color:white; padding:0.8rem; border-radius:6px; text-decoration:none; display:inline-block; text-align:center; cursor:pointer; width: 50%;">Cancelar
+      </a>
+    </div>
+    </form>
 </div>
 
 </body>

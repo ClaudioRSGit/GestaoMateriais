@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Maia Materials Exchange</title>
   <style>
-    /* Seu CSS original mantido */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -70,7 +69,7 @@
   object-fit: contain;
   object-position: center;
   display: block;
-  background: white; /* opcional: fundo para imagens com transparência */
+  background: white;
 }
 .alert {
     position: fixed;
@@ -221,20 +220,30 @@
   </div>
 @endif
 
+    @php
+    function isImage($path) {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        return in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg']);
+    }
+    @endphp
 
   <div class="grid">
     @forelse($posts as $post)
         @if (!$post->is_deleted && $post->is_approved)
             <div class="card">
-                <h3><a href="{{ $post->url }}" target="_blank" rel="noopener noreferrer">{{ $post->title }}</a></h3>
+                <h3>{{ $post->title }}</a></h3>
+                <p><strong>Disponivel até:</strong> {{ $post->expires_at ? $post->expires_at->format('d/m/Y') : 'Sem data limite' }}</p>
                 <div class="image-container">
                     <img
-                        src="{{ $post->url ?: 'https://assets-v2.lottiefiles.com/a/ba3f8d16-1161-11ee-9146-ff1c243cfdd2/8M5yJUdrZC.gif' }}"
+                        src="{{ $post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : 'https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png' }}"
                         alt="{{ $post->title }}"
-                        onerror="this.src='https://assets-v2.lottiefiles.com/a/ba3f8d16-1161-11ee-9146-ff1c243cfdd2/8M5yJUdrZC.gif';"
-                    >
+                        onerror="this.src='https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png';"
+                    />
                 </div>
-                <p>{{ $post->description }}</p>
+                <div style="margin-top: 20px">
+                    <strong>Descrição</strong>
+                    <p>{{ $post->description }}</p>
+                </div>
                 <p><strong>Contacto:</strong> {{ $post->contact }}</p>
             </div>
         @endif

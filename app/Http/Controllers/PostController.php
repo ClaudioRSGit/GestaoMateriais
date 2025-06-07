@@ -3,27 +3,45 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\SiteStat;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::latest()->get();
+        $stat = SiteStat::first();
+
+        if (!$stat) {
+            $stat = SiteStat::create(['visits' => 1]);
+        } else {
+            $stat->increment('visits');
+        }
+
+        $posts = Post::where('is_deleted', false)->where('is_approved', true)->get();
         return view('landing', compact('posts'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'title' => 'required|string|max:255',
-            'url' => 'nullable|url|max:255',
             'description' => 'required|string',
             'contact' => 'required|string|max:255',
+            'duration_days' => 'required|integer|min:1',
+            'attachment' => 'nullable|file|max:512000', // 500MB
         ]);
 
-        Post::create($request->only(['title', 'url', 'description', 'contact']));
+        if ($request->hasFile('attachment')) {
+            $path = $request->file('attachment')->store('attachments', 'public');
+            $data['attachment_path'] = $path;
+        }
 
-        return redirect('/')->with('success', 'Material publicado com sucesso!');
+        $data['expires_at'] = now()->addDays($data['duration_days']);
+        $data['is_active'] = true;
+
+        Post::create($data);
+
+        return redirect('/')->with('success', 'Anúncio publicado com sucesso, aguarda aprovação!');
     }
 
     public function create()

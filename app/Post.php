@@ -8,8 +8,20 @@ class Post extends Model
 {
     protected $fillable = [
         'title',
-        'url',
         'description',
-        'contact'
+        'contact',
+        'is_approved',
+        'is_deleted',
+        'attachment_path',
+        'duration_days',
+        'is_active',
+        'expires_at'
+    ];
+
+    protected $casts = [
+        'is_approved' => 'boolean',
+        'is_deleted' => 'boolean',
+        'is_active' => 'boolean',
+        'expires_at' => 'datetime',
     ];
 }

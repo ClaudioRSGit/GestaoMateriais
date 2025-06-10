@@ -10,11 +10,11 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: #f4f4f4;
+      background: #0b626b;
       color: #333;
     }
     header {
-      background: #005a87;
+      background: #0b626b;
       color: white;
       padding: 1.5rem;
       text-align: center;
@@ -28,7 +28,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     footer {
-      background: #013e5c;
+      background: #0b626b;
       color: white;
       text-align: center;
       padding: 1rem;
@@ -67,7 +67,7 @@
   opacity: 1;
 }
     .card {
-      background: #eaf6fb;
+      background:#F1F2DC;
       padding: 1rem;
       border-radius: 8px;
       text-align: center;
@@ -80,12 +80,16 @@
       margin: 0.5rem 0;
     }
     .image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-  background: white;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+        background:#F1F2DC;
+    }
+.navbar{
+    background-color: #08987F !important;
+    color: #F1F2DC !important;
 }
 .alert {
     position: fixed;
@@ -132,6 +136,11 @@
       gap: 1rem;
       max-width: 600px;
       margin: 0 auto;
+    }
+    .align-center{
+        text-align: center;
+        align-items: center;
+
     }
     form input, form textarea {
       padding: 0.8rem;
@@ -235,16 +244,15 @@
   </div>
 </nav>
 
-
 <header>
 
-    <h1>Maia Materials Exchange</h1>
-  <p>Plataforma autónoma para partilha e aquisição de materiais excedentes industriais</p>
+    <h1 style="color: #F1F2DC; font-size: 60px;">Maia Materials Exchange</h1>
+  <p style="font-size: 20px;">Plataforma autónoma para partilha e aquisição de materiais excedentes industriais</p>
 </header>
 
 <section id="sobre" class="text-center">
   <div>
-    <img src="/environment.jpg" alt="" style="width: 100%; height: auto; max-height: 300px; object-fit:cover;">
+    <img src="/environment.jpg" alt="" style="width: 50%; height: 50%;  object-fit:cover;">
 </div>
  <h1>Sobre o Projeto</h1>
   <p>O Maia Materials Exchange é mais do que uma plataforma digital — é um movimento para transformar desperdício em valor. </p>
@@ -307,14 +315,17 @@
                     <strong>Descrição</strong>
                     <p>{{ $post->description }}</p>
                 </div>
-                <p>
-                    <strong>Contacto:</strong>
-                </p>
+
+                    <p>
+                        <strong>Contacto:</strong>
+                    </p>
                     @guest
                     <span class="contact-tooltip">******<span class="tooltip-text">Faça login para ver o contacto</span></span>
                     @else
                     {{ $post->contact }}
                     @endguest
+
+
             </div>
         @endif
     @empty
@@ -324,7 +335,7 @@
 
 </section>
 
-<section id="contacto">
+<section id="contacto" class="align-center">
   <h2>Contacto</h2>
   <p>Tem dúvidas ou sugestões? Fale connosco!</p>
 
@@ -333,7 +344,7 @@
     <input type="text" name="name" placeholder="O seu nome" required>
     <input type="email" name="email" placeholder="O seu email" required>
     <textarea name="message" rows="5" placeholder="Escreva a sua mensagem..." required></textarea>
-    <button type="submit">Enviar Mensagem</button>
+    <button type="submit" style="background: #0b626b;">Enviar Mensagem</button>
   </form>
 </section>
 

@@ -108,7 +108,18 @@
       padding: 1rem;
       margin-bottom: 1rem;
     }
+    .conditional-input {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s ease;
+        opacity: 0;
+    }
 
+    .conditional-input.active {
+        height: auto;
+        opacity: 1;
+        margin-top: 1rem;
+    }
     button, .cancel-btn {
       padding: 0.8rem 1rem;
       border-radius: var(--input-radius);
@@ -192,12 +203,12 @@
         <option value="url" {{ old('type') === 'url' ? 'selected' : '' }}>URL</option>
       </select>
 
-      <div id="attachment-input">
-        <label for="attachment">Anexo (max 500MB)</label>
+      <div id="attachment-input" class="conditional-input active">
+        <label for="attachmen   t">Anexo (max 500MB)</label>
         <input type="file" name="attachment">
       </div>
 
-      <div id="url-input" style="display:none;">
+      <div id="url-input" class="conditional-input">
         <label for="url">URL</label>
         <input type="url" name="url" value="{{ old('url') }}">
       </div>
@@ -220,22 +231,22 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const typeSelector = document.getElementById('type');
-      const attachmentInput = document.getElementById('attachment-input');
-      const urlInput = document.getElementById('url-input');
+    const typeSelector = document.getElementById('type');
+    const attachmentInput = document.getElementById('attachment-input');
+    const urlInput = document.getElementById('url-input');
 
-      function toggleInputs() {
+    function toggleInputs() {
         if (typeSelector.value === 'attachment') {
-          attachmentInput.style.display = 'block';
-          urlInput.style.display = 'none';
+        attachmentInput.classList.add('active');
+        urlInput.classList.remove('active');
         } else {
-          attachmentInput.style.display = 'none';
-          urlInput.style.display = 'block';
+        attachmentInput.classList.remove('active');
+        urlInput.classList.add('active');
         }
-      }
+    }
 
-      typeSelector.addEventListener('change', toggleInputs);
-      toggleInputs();
+    typeSelector.addEventListener('change', toggleInputs);
+    toggleInputs(); // chamada inicial
     });
   </script>
 

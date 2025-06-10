@@ -21,9 +21,11 @@
 
     @php
     function isImage($path) {
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $ext = strtolower(pathinfo(parse_url($path, PHP_URL_PATH), PATHINFO_EXTENSION));
+
         return in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg']);
     }
+
 
     function getProgressPercentage($createdAt, $expiresAt) {
         if (!$expiresAt || $createdAt->gt($expiresAt)) return 100;
@@ -60,7 +62,7 @@
                             <div class="d-flex">
                                 <div style="margin-right: 10px;">
                                     <img
-                                        src="{{ $post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : 'https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png' }}"
+                                        src="{{ $post->url ?? ($post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : 'https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png') }}"
                                         alt="{{ $post->title }}"
                                         onerror="this.src='https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png';"
                                         class="rounded-circle me-2"

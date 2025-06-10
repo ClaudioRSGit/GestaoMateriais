@@ -28,12 +28,16 @@ class PostController extends Controller
             'description' => 'required|string',
             'contact' => 'required|string|max:255',
             'duration_days' => 'required|integer|min:1',
-            'attachment' => 'nullable|file|max:512000', // 500MB
+            'type' => 'required|in:url,attachment',
+            'url' => 'nullable|required_if:type,url|url|max:2048',
+            'attachment' => 'nullable|required_if:type,attachment|file|max:512000',
         ]);
 
-        if ($request->hasFile('attachment')) {
-            $path = $request->file('attachment')->store('attachments', 'public');
-            $data['attachment_path'] = $path;
+        if ($request->type === 'attachment' && $request->hasFile('attachment')) {
+            $data['attachment_path'] = $request->file('attachment')->store('attachments', 'public');
+            $data['url'] = null;
+        } elseif ($request->type === 'url') {
+            $data['attachment_path'] = null;
         }
 
         $data['expires_at'] = now()->addDays($data['duration_days']);

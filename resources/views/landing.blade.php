@@ -19,7 +19,11 @@
       padding: 1.5rem;
       text-align: center;
     }
-
+    .card-img{
+        align-items: center;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
     section {
       padding: 2rem;
       background: white;
@@ -215,11 +219,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{{ route('login') }}">Login</a>
         </li>
-        @if (Route::has('register'))
+        {{-- @if (Route::has('register'))
           <li class="nav-item">
             <a class="nav-link" href="{{ route('register') }}">Registar</a>
           </li>
-        @endif
+        @endif --}}
       @else
         <li class="nav-item dropdown">
           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
@@ -306,15 +310,51 @@
                 <p><strong>Disponivel até:</strong> {{ $post->expires_at ? $post->expires_at->format('d/m/Y') : 'Sem data limite' }}</p>
                 <div class="image-container">
                     <img
-                        src="{{ $post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : 'https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png' }}"
+                        src="{{ $post->url ?? ($post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : 'https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png') }}"
                         alt="{{ $post->title }}"
                         onerror="this.src='https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png';"
                     />
                 </div>
+                @php
+                    $desc = $post->description;
+                    $descLimit = 100;
+                @endphp
                 <div style="margin-top: 20px">
                     <strong>Descrição</strong>
-                    <p>{{ $post->description }}</p>
+                    @if(strlen($desc) > $descLimit)
+                        <p>
+                            <span class="desc-short-{{ $post->id }}">{{ Str::limit($desc, $descLimit) }}</span>
+                            <span class="desc-full-{{ $post->id }}" style="display:none;">{{ $desc }}</span>
+                            <a href="javascript:void(0);" class="ver-mais" data-id="{{ $post->id }}">ver mais</a>
+                            <a href="javascript:void(0);" class="ver-menos" data-id="{{ $post->id }}" style="display:none;">ver menos</a>
+                        </p>
+                    @else
+                        <p>{{ $desc }}</p>
+                    @endif
                 </div>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.querySelectorAll('.ver-mais').forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            var id = btn.getAttribute('data-id');
+                            document.querySelector('.desc-short-' + id).style.display = 'none';
+                            document.querySelector('.desc-full-' + id).style.display = '';
+                            btn.style.display = 'none';
+                            document.querySelector('.ver-menos[data-id="' + id + '"]').style.display = '';
+                        });
+                    });
+                    document.querySelectorAll('.ver-menos').forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            var id = btn.getAttribute('data-id');
+                            document.querySelector('.desc-short-' + id).style.display = '';
+                            document.querySelector('.desc-full-' + id).style.display = 'none';
+                            btn.style.display = 'none';
+                            document.querySelector('.ver-mais[data-id="' + id + '"]').style.display = '';
+                        });
+                    });
+                });
+                </script>
+
 
                     <p>
                         <strong>Contacto:</strong>
@@ -333,6 +373,58 @@
     @endforelse
 </div>
 
+</section>
+
+<section id="testemunhos" class="align-center">
+    <h2>Testemunhos</h2>
+    <p>Veja o que dizem os nossos utilizadores:</p>
+    <div class="grid">
+        <div class="card card-img">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Testemunho Ana" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom: 1rem;">
+            <p>"Uma plataforma incrível! Consegui doar materiais que não usava e ajudar outras empresas."</p>
+            <p><strong>Ana, Empresa de Construção</strong></p>
+        </div>
+        <div class="card card-img">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Testemunho João" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom: 1rem;">
+            <p>"Excelente iniciativa! Encontrei materiais que precisava a um custo muito baixo."</p>
+            <p><strong>João, Responsável de produção</strong></p>
+        </div>
+        <div class="card card-img">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Testemunho Maria" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom: 1rem;">
+            <p>"A MaiaXChange facilitou a partilha de recursos entre empresas locais. Recomendo!"</p>
+            <p><strong>Maria, Gestora de Projetos</strong></p>
+        </div>
+    </div>
+</section>
+
+<section class="align-center" style="margin-bottom: 2rem;">
+    <h2>Os nossos parceiros</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 3.5rem; margin-top: 1.5rem;">
+        <div style="text-align: center;">
+            <div style="width:110px; height:110px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5qZ5zcsTJhRXLUtFFOJLjnMzZAt1Mlza7yw&s" alt="Parceiro 1" style="max-width:80px; max-height:80px; object-fit: contain; border-radius: 0;">
+            </div>
+            <div style="margin-top: 0.8rem;">Plastrofa</div>
+        </div>
+        <div style="text-align: center;">
+            <div style="width:110px; height:110px; margin: 0 auto;  display: flex; align-items: center; justify-content: center;">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbgNz8hfRFw9HxlAfBeDOPajUQmRDaW2P0pw&s" alt="Parceiro 2" style="max-width:80px; max-height:80px; object-fit: contain; border-radius: 0;">
+            </div>
+            <div style="margin-top: 0.8rem;">Hansa Flex</div>
+        </div>
+        <div style="text-align: center;">
+            <div style="width:110px; height:110px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Mota-Engil_Logo.svg/1691px-Mota-Engil_Logo.svg.png" alt="Parceiro 3" style="max-width:80px; max-height:80px; object-fit: contain; border-radius: 0;">
+            </div>
+            <div style="margin-top: 0.8rem;">Mota Engil</div>
+        </div>
+        <div style="text-align: center;">
+            <div style="width:110px; height:110px; margin: 0 auto;  display: flex; align-items: center; justify-content: center;">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOffz_MVTzfn7ZB8B0CJ-w3xMDCxGaokxKjw&s" alt="Parceiro 4" style="max-width:80px; max-height:80px; object-fit: contain; border-radius: 0;">
+            </div>
+            <div style="margin-top: 0.8rem;">UMAIA</div>
+        </div>
+    </div>
 </section>
 
 <section id="contacto" class="align-center">

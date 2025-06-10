@@ -97,8 +97,21 @@
     <input type="text" name="title" placeholder="Título" value="{{ old('title') }}" required>
 
 
-    <label for="attachment">Anexo (max 500MB)</label>
-    <input type="file" name="attachment" class="form-control">
+    <label for="type">Tipo de Conteúdo</label>
+    <select name="type" id="type" class="form-control" required>
+        <option value="attachment" {{ old('type') === 'attachment' ? 'selected' : '' }}>Anexo</option>
+        <option value="url" {{ old('type') === 'url' ? 'selected' : '' }}>URL</option>
+    </select>
+
+    <div id="attachment-input" style="margin-top:10px;">
+        <label for="attachment">Anexo (max 500MB)</label>
+        <input type="file" name="attachment" class="form-control">
+    </div>
+
+    <div id="url-input" style="margin-top:10px; display:none;">
+        <label for="url">URL</label>
+        <input type="url" name="url" class="form-control" value="{{ old('url') }}">
+    </div>
 
     <label for="duration_days">Duração do Anúncio (dias)</label>
     <input type="number" name="duration_days" class="form-control" value="7" min="1">
@@ -113,7 +126,29 @@
         style="background:#d9534f; color:white; padding:0.8rem; border-radius:6px; text-decoration:none; display:inline-block; text-align:center; cursor:pointer; width: 50%;">Cancelar
       </a>
     </div>
+
     </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const typeSelector = document.getElementById('type');
+            const attachmentInput = document.getElementById('attachment-input');
+            const urlInput = document.getElementById('url-input');
+
+            function toggleInputs() {
+                if (typeSelector.value === 'attachment') {
+                    attachmentInput.style.display = 'block';
+                    urlInput.style.display = 'none';
+                } else {
+                    attachmentInput.style.display = 'none';
+                    urlInput.style.display = 'block';
+                }
+            }
+
+            typeSelector.addEventListener('change', toggleInputs);
+            toggleInputs(); // chamada inicial
+        });
+    </script>
+
 </div>
 
 </body>

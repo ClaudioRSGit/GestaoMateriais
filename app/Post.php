@@ -15,7 +15,8 @@ class Post extends Model
         'attachment_path',
         'duration_days',
         'is_active',
-        'expires_at'
+        'expires_at',
+        'url'
     ];
 
     protected $casts = [

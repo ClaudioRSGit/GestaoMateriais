@@ -3,153 +3,241 @@
 <head>
   <meta charset="UTF-8">
   <title>Publicar Material</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <style>
+    :root {
+      --primary: #0b626b;
+      --primary-dark: #005a87;
+      --accent: #F1F2DC;
+      --bg-light: #ffffff;
+      --text-dark: #333333;
+      --radius: 10px;
+      --input-radius: 6px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-    }
-    header {
-      background: #005a87;
-      color: white;
-      text-align: center;
-    }
-    nav {
-      background: #013e5c;
-      padding: 1rem;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      min-height: 100vh;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
+      flex-direction: column;
+    }
+
+    nav {
+      background: var(--primary);
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      color: var(--accent);
     }
+
     nav a {
-      color: white;
+      color: var(--accent);
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 600;
+      transition: opacity 0.2s;
     }
-    .nav-links {
-      display: flex;
-      gap: 1rem;
+
+    nav a:hover {
+      opacity: 0.8;
     }
+
     .form-container {
-      background: white;
+      background: var(--accent);
       max-width: 600px;
-      margin: auto;
+      margin: 40px auto;
       padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      font-size: 1.75rem;
+    }
+
     form {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.2rem;
     }
-    input, textarea {
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    input, textarea, select {
       padding: 0.8rem;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: var(--input-radius);
       font-size: 1rem;
+      width: 100%;
+      background: #fdfdfd;
+      transition: border 0.2s, box-shadow 0.2s;
     }
-    @media (max-width: 600px) {
-      nav {
-        flex-direction: column;
-        align-items: center;
-      }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(11, 98, 107, 0.2);
+      outline: none;
     }
-    button {
-      background: #005a87;
-      color: white;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 6px;
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .error-messages {
+      color: #721c24;
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      border-radius: var(--input-radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    button, .cancel-btn {
+      padding: 0.8rem 1rem;
+      border-radius: var(--input-radius);
       font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
+      text-align: center;
+      transition: background 0.2s;
     }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+    }
+
     button:hover {
-      background: #00466b;
+      background: var(--primary-dark);
+    }
+
+    .cancel-btn {
+      background: #d9534f;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .cancel-btn:hover {
+      background: #c9302c;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .form-actions {
+        flex-direction: column;
+      }
+      .form-actions a,
+      .form-actions button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-<nav>
-  <div class="nav-links">
-    <a href="/">Início</a>
-  </div>
 
-</nav>
-<div class="form-container" style="margin-top: 30px">
-  <h2>Publicar Novo Material</h2>
-
-  {{-- Erros de validação --}}
-  @if ($errors->any())
-    <div style="color:red;">
-      <ul>
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
+  <nav>
+    <a href="/" class="navbar-brand">MaiaXChange</a>
+    <div class="nav-links">
+      <a href="/">Início</a>
     </div>
-  @endif
+  </nav>
 
-  <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    <input type="text" name="title" placeholder="Título" value="{{ old('title') }}" required>
+  <div class="form-container">
+    <h2>Publicar Novo Material</h2>
 
+    {{-- Erros de validação --}}
+    @if ($errors->any())
+      <div class="error-messages">
+        <ul class="mb-0 pl-3">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
 
-    <label for="type">Tipo de Conteúdo</label>
-    <select name="type" id="type" class="form-control" required>
+    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      <input type="text" name="title" placeholder="Título" value="{{ old('title') }}" required>
+
+      <label for="type">Tipo de Conteúdo</label>
+      <select name="type" id="type" required>
         <option value="attachment" {{ old('type') === 'attachment' ? 'selected' : '' }}>Anexo</option>
         <option value="url" {{ old('type') === 'url' ? 'selected' : '' }}>URL</option>
-    </select>
+      </select>
 
-    <div id="attachment-input" style="margin-top:10px;">
+      <div id="attachment-input">
         <label for="attachment">Anexo (max 500MB)</label>
-        <input type="file" name="attachment" class="form-control">
-    </div>
+        <input type="file" name="attachment">
+      </div>
 
-    <div id="url-input" style="margin-top:10px; display:none;">
+      <div id="url-input" style="display:none;">
         <label for="url">URL</label>
-        <input type="url" name="url" class="form-control" value="{{ old('url') }}">
-    </div>
+        <input type="url" name="url" value="{{ old('url') }}">
+      </div>
 
-    <label for="duration_days">Duração do Anúncio (dias)</label>
-    <input type="number" name="duration_days" class="form-control" value="7" min="1">
+      <label for="duration_days">Duração do Anúncio (dias)</label>
+      <input type="number" name="duration_days" value="7" min="1">
 
-    <textarea name="description" placeholder="Descrição" required>{{ old('description') }}</textarea>
+      <label for="description">Descrição</label>
+      <textarea name="description" placeholder="Descrição" required>{{ old('description') }}</textarea>
 
-    <input type="text" name="contact" placeholder="Contacto (email ou telefone)" value="{{ old('contact') }}" required>
+      <label for="contact">Contacto (email ou telefone)</label>
+      <input type="text" name="contact" placeholder="Contacto" value="{{ old('contact') }}" required>
 
-    <div style="text-align: center; margin-top: 20px; width: 100%; display: flex; justify-content: center; gap: 10px;">
-      <button type="submit" style="width: 50%">Guardar</button>
-      <a href="{{ url('/') }}" class="btn-danger"
-        style="background:#d9534f; color:white; padding:0.8rem; border-radius:6px; text-decoration:none; display:inline-block; text-align:center; cursor:pointer; width: 50%;">Cancelar
-      </a>
-    </div>
-
+      <div class="form-actions">
+        <button type="submit" style="width: 50%">Guardar</button>
+        <a href="{{ url('/') }}" style="width: 50%" class="cancel-btn">Cancelar</a>
+      </div>
     </form>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const typeSelector = document.getElementById('type');
-            const attachmentInput = document.getElementById('attachment-input');
-            const urlInput = document.getElementById('url-input');
+  </div>
 
-            function toggleInputs() {
-                if (typeSelector.value === 'attachment') {
-                    attachmentInput.style.display = 'block';
-                    urlInput.style.display = 'none';
-                } else {
-                    attachmentInput.style.display = 'none';
-                    urlInput.style.display = 'block';
-                }
-            }
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const typeSelector = document.getElementById('type');
+      const attachmentInput = document.getElementById('attachment-input');
+      const urlInput = document.getElementById('url-input');
 
-            typeSelector.addEventListener('change', toggleInputs);
-            toggleInputs(); // chamada inicial
-        });
-    </script>
+      function toggleInputs() {
+        if (typeSelector.value === 'attachment') {
+          attachmentInput.style.display = 'block';
+          urlInput.style.display = 'none';
+        } else {
+          attachmentInput.style.display = 'none';
+          urlInput.style.display = 'block';
+        }
+      }
 
-</div>
+      typeSelector.addEventListener('change', toggleInputs);
+      toggleInputs();
+    });
+  </script>
 
 </body>
 </html>

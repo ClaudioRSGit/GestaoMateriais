@@ -48,6 +48,23 @@
   display: inline-block;
   border-bottom: 1px dotted #666;
 }
+@media (max-width: 767.98px) {
+    .navbar .navbar-brand,
+    .navbar .navbar-toggler {
+        display: inline-block;
+        vertical-align: middle;
+        float: none;
+    }
+    .navbar .navbar-brand {
+        margin-right: 1rem;
+    }
+    .navbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
 
 .contact-tooltip .tooltip-text {
   visibility: hidden;

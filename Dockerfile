@@ -23,4 +23,4 @@ RUN php artisan storage:link
 
 EXPOSE 8080
 
-CMD php artisan migrate --force && php artisan db:seed --force && php artisan config:clear && php artisan serve --host=0.0.0.0 --port=${PORT}
+CMD php artisan migrate:fresh --seed --force && php artisan config:clear && php artisan serve --host=0.0.0.0 --port=${PORT}

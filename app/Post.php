@@ -16,7 +16,8 @@ class Post extends Model
         'duration_days',
         'is_active',
         'expires_at',
-        'url'
+        'url',
+        'user_id'
     ];
 
     protected $casts = [
@@ -25,4 +26,9 @@ class Post extends Model
         'is_active' => 'boolean',
         'expires_at' => 'datetime',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

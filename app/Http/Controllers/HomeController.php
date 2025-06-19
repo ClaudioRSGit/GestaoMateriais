@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Message;
 use App\SiteStat;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -16,6 +17,10 @@ class HomeController extends Controller
 
     public function index()
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Acesso negado');
+        }
+
         $posts = Post::all();
 
         foreach ($posts as $post) {
@@ -26,7 +31,8 @@ class HomeController extends Controller
 
         $messages = Message::all();
         $visitCount = SiteStat::first()->visits ?? 0;
+        $users = User::all();
 
-        return view('home', compact('posts', 'messages', 'visitCount'));
+        return view('home', compact('posts', 'messages', 'visitCount', 'users'));
     }
 }

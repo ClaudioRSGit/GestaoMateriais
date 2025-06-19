@@ -172,12 +172,7 @@
 </head>
 <body>
 
-  <nav>
-    <a href="/" class="navbar-brand">MaiaXChange</a>
-    <div class="nav-links">
-      <a href="/">Início</a>
-    </div>
-  </nav>
+    @include('partials._navbar')
 
   <div class="form-container">
     <h2>Publicar Novo Material</h2>

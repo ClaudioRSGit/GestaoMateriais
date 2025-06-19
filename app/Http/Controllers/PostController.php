@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\SiteStat;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -42,6 +43,7 @@ class PostController extends Controller
 
         $data['expires_at'] = now()->addDays($data['duration_days']);
         $data['is_active'] = true;
+        $data['user_id'] = Auth::id();
 
         Post::create($data);
 

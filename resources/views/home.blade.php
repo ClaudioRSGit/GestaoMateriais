@@ -17,6 +17,9 @@
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="messages-tab" data-bs-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Mensagens</a>
         </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="users-tab" data-bs-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">Utilizadores</a>
+        </li>
     </ul>
 
     @php
@@ -173,6 +176,71 @@
                 </tbody>
             </table>
         </div> <!-- Fim do tab-pane messages -->
+        <!-- USERS TAB -->
+        <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+            <div class="mb-3">
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-3">Criar Novo Utilizador</a>
+            </div>
+            <table class="table table-bordered table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Verificado</th>
+                        <th>Estado</th>
+                        <th>Função</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($users as $user)
+                    <tr>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td class="text-center">
+                            @if ($user->email_verified_at)
+                                <span class="badge bg-success" title="Email verificado">
+                                    <i class="bi bi-patch-check-fill"></i> Verificado
+                                </span>
+                            @else
+                                <span class="badge bg-warning text-dark" title="Email não verificado">
+                                    <i class="bi bi-patch-exclamation-fill"></i> Não verificado
+                                </span>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if ($user->is_active)
+                                <span class="badge bg-success" title="Utilizador ativo">
+                                    <i class="bi bi-person-check-fill"></i> Ativo
+                                </span>
+                            @else
+                                <span class="badge bg-secondary" title="Utilizador inativo">
+                                    <i class="bi bi-person-x-fill"></i> Inativo
+                                </span>
+                            @endif
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ route('admin.users.role', $user->id) }}">
+                                @csrf
+                                <select name="role" onchange="this.form.submit()" class="form-select form-select-sm">
+                                    <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
+                                    <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                </select>
+                            </form>
+                        </td>
+                        <td class="text-center">
+                            <form method="POST" action="{{ route('admin.users.toggle', $user->id) }}">
+                                @csrf
+                                <button class="btn btn-sm {{ $user->is_active ? 'btn-danger' : 'btn-success' }}">
+                                    {{ $user->is_active ? 'Desativar' : 'Ativar' }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div> <!-- Fim do tab-content -->
 </div>
 @endsection

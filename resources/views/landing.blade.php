@@ -66,10 +66,14 @@
     @forelse($posts as $post)
       @if (!$post->is_deleted && $post->is_approved && (!$post->expires_at || $post->expires_at->isFuture()))
         <div class="material-card">
-          <img
-            src="{{ $post->url ?? ($post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : '') }}"
+          @php
+                $isImage = in_array(strtolower(pathinfo($post->attachment_path, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp']);
+            @endphp
+
+            <img
+            src="{{ $post->url ?? ($post->attachment_path && $isImage ? asset('storage/' . $post->attachment_path) : '') }}"
             alt="{{ $post->title }}"
-          />
+            />
 
           <h3>{{ $post->title }}</h3>
 

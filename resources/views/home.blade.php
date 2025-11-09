@@ -65,9 +65,8 @@
                             <div class="d-flex">
                                 <div style="margin-right: 10px;">
                                     <img
-                                        src="{{ $post->url ?? ($post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : 'https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png') }}"
+                                        src="{{ $post->url ?? ($post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : '') }}"
                                         alt="{{ $post->title }}"
-                                        onerror="this.src='https://static-00.iconduck.com/assets.00/document-round-icon-2048x2048-gay00wsr.png';"
                                         class="rounded-circle me-2"
                                         style="width: 40px; height: 40px; object-fit: cover;"
                                     />

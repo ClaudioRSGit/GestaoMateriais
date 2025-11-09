@@ -67,7 +67,7 @@
       @if (!$post->is_deleted && $post->is_approved && (!$post->expires_at || $post->expires_at->isFuture()))
         <div class="material-card">
           <img
-            src="{{ $post->url ?? ($post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path)) }}"
+            src="{{ $post->url ?? ($post->attachment_path && isImage($post->attachment_path) ? asset('storage/' . $post->attachment_path) : '') }}"
             alt="{{ $post->title }}"
           />
 

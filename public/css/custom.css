@@ -342,7 +342,14 @@ header p {
   font-size: 0.75rem;
   pointer-events: none;
 }
-
+#sobre h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #0b626b;
+  text-align: center;
+  margin: 20px 0 20px 0;
+}
 /* Section: Testemunhos */
 #testemunhos {
   max-width: 1000px;

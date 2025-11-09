@@ -36,6 +36,25 @@
       <p>Conectamos parceiros para um ciclo de materiais mais consciente e colaborativo.</p>
     </div>
   </div>
+
+  <h2>Métricas</h2>
+  <div class="grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-top: 2rem;">
+        <div class="card" style="flex: 1 1 250px; max-width: 280px; background: #f9f9f9; padding: 2rem; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+        <div class="icon" style="font-size: 2.5rem;">♻️</div>
+        <h3 style="font-size: 2rem; margin: 0.5rem 0;">1.250</h3>
+        <p>toneladas de materiais trocados</p>
+        </div>
+        <div class="card" style="flex: 1 1 250px; max-width: 280px; background: #f9f9f9; padding: 2rem; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+        <div class="icon" style="font-size: 2.5rem;">💶</div>
+        <h3 style="font-size: 2rem; margin: 0.5rem 0;">250.000€</h3>
+        <p>poupados pelas empresas</p>
+        </div>
+        <div class="card" style="flex: 1 1 250px; max-width: 280px; background: #f9f9f9; padding: 2rem; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+        <div class="icon" style="font-size: 2.5rem;">🍃</div>
+        <h3 style="font-size: 2rem; margin: 0.5rem 0;">360t</h3>
+        <p>CO₂ evitado</p>
+        </div>
+    </div>
 </section>
 
 <section id="materiais">
